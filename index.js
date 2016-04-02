@@ -50,6 +50,17 @@ app.get('/', function (req, res) {
     res.send('Hello World!');
 });
 
+app.get('/search', function(req, res) {
+    if (!req.query.address) {
+        res.status(400).send('Bad Request');
+    }
+    getLocationData(req.query.address).then(function(data) {
+        getHouseData(data).then(function(data) {
+            res.send(data);
+        });
+    });
+});
+
 app.listen(3000, function () {
     console.log('House Hunter listening on port 3000!');
 });
