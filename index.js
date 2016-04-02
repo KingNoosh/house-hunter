@@ -25,6 +25,25 @@ var getLocationData = function(address) {
                 resolve(data);
             });
         });
+    },
+    getHouseData = function(data) {
+        var url = "http://api.zoopla.co.uk/api/v1/property_listings.js?api_key=pk77v6rbuevs3nqzjk26bx9u&radius=1";
+        url += data.bounds?"&lat_min="+data.bounds.southwest.lat+"&lat_max="+data.bounds.northeast.lat+"&lon_min="+data.bounds.northeast.lng+"&lon_max="+data.bounds.southwest.lng:"&lat_min="+data.viewport.southwest.lat+"&lat_max="+data.viewport.northeast.lat+"&lon_min="+data.viewport.northeast.lng+"&lon_max="+data.viewport.southwest.lng;
+        return new Promise(function(resolve, reject) {
+            var data;
+            request({url:url}, function(err, res, body) {
+                if (err) {
+                    return reject(err);
+                } else if (res.statusCode !== 200) {
+                    err = new Error("Unexpected status code: " + res.statusCode);
+                    err.res = res;
+                    return reject(err);
+                }
+                data = JSON.parse(body);
+                console.log(data);
+                resolve(data);
+            });
+        });
     };
 
 app.get('/', function (req, res) {
